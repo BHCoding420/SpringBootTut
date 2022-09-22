@@ -1,8 +1,11 @@
 package com.springbootstart.Springbootstart.service;
 
+import com.springbootstart.Springbootstart.controller.DepartmentController;
 import com.springbootstart.Springbootstart.entity.Department;
 import com.springbootstart.Springbootstart.error.DepartmentNotFoundException;
 import com.springbootstart.Springbootstart.repository.DepartmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ public class DepartmentServiceImpl implements  DepartmentService{
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
+
     @Override
     public Department saveDepartment(Department department) {
         return departmentRepository.save(department);
@@ -28,9 +33,12 @@ public class DepartmentServiceImpl implements  DepartmentService{
 
     @Override
     public Department fetchDepartmentById(Long departmentId) throws DepartmentNotFoundException {
-        Optional<Department> department = Optional.of(departmentRepository.findById(departmentId).get());
+        Optional<Department> department =
+                departmentRepository.findById(departmentId);
+        LOGGER.info("department not here");
         if(!department.isPresent())
         {
+            LOGGER.info("department not present");
             throw new DepartmentNotFoundException("Department not available");
         }
         return department.get();
